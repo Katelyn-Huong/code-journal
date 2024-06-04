@@ -1,24 +1,10 @@
-/* exported data */
-interface JournalEntry {
-  entryId: number;
-  title: string;
-  photoUrl: string;
-  notes: string;
-}
-
-interface dataInterface {
-  view: string;
-  entries: JournalEntry[];
-  editing: JournalEntry | null;
-  nextEntryId: number;
-}
-let data: dataInterface = {
+'use strict';
+let data = {
   view: 'entry-form',
   entries: [],
   editing: null,
   nextEntryId: 1,
 };
-
 const savedDataString = localStorage.getItem('journalData');
 if (savedDataString) {
   const savedData = JSON.parse(savedDataString);
@@ -27,7 +13,6 @@ if (savedDataString) {
 window.addEventListener('beforeunload', () => {
   savedData();
 });
-
-function savedData(): void {
+function savedData() {
   localStorage.setItem('journalData', JSON.stringify(data));
 }
