@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     'photo-preview',
   ) as HTMLImageElement;
 
+  $photoUrlInput.addEventListener('input', () => {
+    const photoUrl =
+      $photoUrlInput.value || 'images/placeholder-image-square.jpg';
+    $photoPreview.setAttribute('src', photoUrl);
+  });
+
   $form.addEventListener('submit', (event: Event) => {
     event.preventDefault();
 
@@ -23,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data.entries.unshift(newEntry);
     data.nextEntryId++;
 
-    $photoPreview.src = 'images/placeholder-image-square.jpg';
+    $photoPreview.setAttribute('src', 'images/placeholder-image-square.jpg');
     $form.reset();
 
     savedData();
