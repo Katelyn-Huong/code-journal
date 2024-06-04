@@ -11,8 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ) as HTMLImageElement;
 
   $photoUrlInput.addEventListener('input', () => {
-    const photoUrl =
-      $photoUrlInput.value || 'images/placeholder-image-square.jpg';
+    const photoUrl = $photoUrlInput.value;
     $photoPreview.setAttribute('src', photoUrl);
   });
 

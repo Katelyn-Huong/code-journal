@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const $notesInput = document.getElementById('notes');
   const $photoPreview = document.getElementById('photo-preview');
   $photoUrlInput.addEventListener('input', () => {
-    const photoUrl =
-      $photoUrlInput.value || 'images/placeholder-image-square.jpg';
+    const photoUrl = $photoUrlInput.value;
     $photoPreview.setAttribute('src', photoUrl);
   });
   $form.addEventListener('submit', (event) => {
