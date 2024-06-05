@@ -19,13 +19,16 @@
   <body>
     <header class="header-container">
       <div class="container">
-        <h1 class="header-title">Code Journal</h1>
+        <nav class="row3">
+          <h1 class="header-title">Code Journal</h1>
+
+          <a href="#" id="entries-link">Entries</a>
+        </nav>
       </div>
     </header>
-    <h2 class="container">New Entry</h2>
-
     <main class="container">
       <div data-view="entry-form">
+        <h2>New Entry</h2>
         <form id="entry-form" class="entry-form">
           <div class="row">
             <div class="column-half">
@@ -56,7 +59,15 @@
           </div>
         </form>
       </div>
-      <div data-view="entries" class="hidden"></div>
+      <div data-view="entries" class="hidden">
+        <div class="row2">
+          <h2>Entries</h2>
+          <a id="new-entry" class="new-entry-button"> NEW </a>
+        </div>
+
+        <p id="no-entries" class="hidden">No entries have been recorded.</p>
+        <ul id="entries-list"></ul>
+      </div>
     </main>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
