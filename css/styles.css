@@ -59,7 +59,6 @@ button[type='submit']:hover {
 }
 
 .entry-image img {
-  width: 80%;
   object-fit: cover;
 }
 
@@ -82,7 +81,7 @@ button[type='submit']:hover {
   padding-left: 20px;
 }
 
-@media (width >= 768px) {
+@media (width <= 768px) {
   .entry-item {
     flex-direction: column;
   }

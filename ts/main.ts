@@ -1,53 +1,60 @@
+const $form = document.getElementById('entry-form') as HTMLFormElement;
+const $titleInput = document.getElementById('title') as HTMLInputElement;
+const $photoUrlInput = document.getElementById('photo-url') as HTMLInputElement;
+const $notesInput = document.getElementById('notes') as HTMLTextAreaElement;
+const $photoPreview = document.getElementById(
+  'photo-preview',
+) as HTMLImageElement;
+const $entriesList = document.getElementById(
+  'entries-list',
+) as HTMLUListElement;
+
+const $newEntryButton = document.getElementById(
+  'new-entry',
+) as HTMLButtonElement;
+const $entriesLink = document.getElementById(
+  'entries-link',
+) as HTMLAnchorElement;
+
+const $noEntries = document.getElementById('no-entries') as HTMLElement;
+
+const $entryFormView = document.querySelector(
+  '[data-view="entry-form"]',
+) as HTMLElement;
+const $entriesView = document.querySelector(
+  '[data-view="entries"]',
+) as HTMLElement;
+
+$photoUrlInput.addEventListener('input', () => {
+  const photoUrl = $photoUrlInput.value;
+  $photoPreview.setAttribute('src', photoUrl);
+});
+
+$form.addEventListener('submit', (event: Event) => {
+  event.preventDefault();
+
+  const newEntry: JournalEntry = {
+    entryId: data.nextEntryId,
+    title: $titleInput.value,
+    photoUrl: $photoUrlInput.value,
+    notes: $notesInput.value,
+  };
+
+  data.entries.unshift(newEntry);
+  data.nextEntryId++;
+
+  const $entry = renderEntry(newEntry);
+  $entriesList.prepend($entry);
+
+  $photoPreview.setAttribute('src', 'images/placeholder-image-square.jpg');
+  $form.reset();
+
+  savedData();
+  toggleNoEntries();
+  viewSwap('entries');
+});
+
 document.addEventListener('DOMContentLoaded', () => {
-  const $form = document.getElementById('entry-form') as HTMLFormElement;
-  const $titleInput = document.getElementById('title') as HTMLInputElement;
-  const $photoUrlInput = document.getElementById(
-    'photo-url',
-  ) as HTMLInputElement;
-  const $notesInput = document.getElementById('notes') as HTMLTextAreaElement;
-  const $photoPreview = document.getElementById(
-    'photo-preview',
-  ) as HTMLImageElement;
-  const $entriesList = document.getElementById(
-    'entries-list',
-  ) as HTMLUListElement;
-
-  const $newEntryButton = document.getElementById(
-    'new-entry',
-  ) as HTMLButtonElement;
-  const $entriesLink = document.getElementById(
-    'entries-link',
-  ) as HTMLAnchorElement;
-
-  $photoUrlInput.addEventListener('input', () => {
-    const photoUrl = $photoUrlInput.value;
-    $photoPreview.setAttribute('src', photoUrl);
-  });
-
-  $form.addEventListener('submit', (event: Event) => {
-    event.preventDefault();
-
-    const newEntry: JournalEntry = {
-      entryId: data.nextEntryId,
-      title: $titleInput.value,
-      photoUrl: $photoUrlInput.value,
-      notes: $notesInput.value,
-    };
-
-    data.entries.unshift(newEntry);
-    data.nextEntryId++;
-
-    const $entry = renderEntry(newEntry);
-    $entriesList.prepend($entry);
-
-    $photoPreview.setAttribute('src', 'images/placeholder-image-square.jpg');
-    $form.reset();
-
-    savedData();
-    toggleNoEntries();
-    viewSwap('entries');
-  });
-
   data.entries.forEach((entry) => {
     const $entry = renderEntry(entry);
     $entriesList.appendChild($entry);
@@ -55,18 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   toggleNoEntries();
   viewSwap(data.view);
+});
 
-  $newEntryButton.addEventListener('click', (event) => {
-    event.preventDefault();
-    viewSwap('entry-form');
-  });
-
-  if ($entriesLink) {
-    $entriesLink.addEventListener('click', (event) => {
-      event.preventDefault();
-      viewSwap('entries');
-    });
-  }
+if (!$entriesLink) throw new Error('error querying $entriesLink');
+$entriesLink.addEventListener('click', (event) => {
+  event.preventDefault();
+  viewSwap('entries');
+});
+if (!$newEntryButton) throw new Error('error querying $newEntryButton');
+$newEntryButton.addEventListener('click', (event) => {
+  event.preventDefault();
+  viewSwap('entry-form');
 });
 
 function renderEntry(entry: JournalEntry): HTMLElement {
@@ -96,10 +102,6 @@ function renderEntry(entry: JournalEntry): HTMLElement {
 }
 
 function toggleNoEntries(): void {
-  const $entriesList = document.getElementById(
-    'entries-list',
-  ) as HTMLUListElement;
-  const $noEntries = document.getElementById('no-entries') as HTMLElement;
   if (data.entries.length === 0) {
     $noEntries.classList.remove('hidden');
     $entriesList.classList.add('hidden');
@@ -110,13 +112,6 @@ function toggleNoEntries(): void {
 }
 
 function viewSwap(view: string): void {
-  const $entryFormView = document.querySelector(
-    '[data-view="entry-form"]',
-  ) as HTMLElement;
-  const $entriesView = document.querySelector(
-    '[data-view="entries"]',
-  ) as HTMLElement;
-
   if (view === 'entry-form') {
     $entryFormView.classList.remove('hidden');
     $entriesView.classList.add('hidden');
