@@ -19,6 +19,17 @@ body {
   flex-wrap: wrap;
 }
 
+.row2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.row3 {
+  display: flex;
+  justify-content: left;
+}
+
 .column-half {
   flex-basis: 50%;
   padding-left: 10px;
