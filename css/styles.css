@@ -60,6 +60,7 @@ button[type='submit']:hover {
 
 .entry-image img {
   object-fit: cover;
+  width: 100%;
 }
 
 #entries-link {
@@ -79,16 +80,21 @@ button[type='submit']:hover {
 
 .entry-content {
   padding-left: 20px;
+  justify-content: space-between;
+}
+
+i {
+  cursor: pointer;
+}
+
+.entry-content i {
+  justify-content: space-around;
+  margin-left: 121px;
 }
 
 @media (width <= 768px) {
-  .entry-item {
-    flex-direction: column;
-  }
-
   .entry-image img {
     width: 100%;
-    height: auto;
     margin: 0 0 10px;
   }
 }

@@ -10,22 +10,47 @@ const $entriesLink = document.getElementById('entries-link');
 const $noEntries = document.getElementById('no-entries');
 const $entryFormView = document.querySelector('[data-view="entry-form"]');
 const $entriesView = document.querySelector('[data-view="entries"]');
+const $title = document.querySelector('#form-header');
 $photoUrlInput.addEventListener('input', () => {
   const photoUrl = $photoUrlInput.value;
   $photoPreview.setAttribute('src', photoUrl);
 });
 $form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const newEntry = {
-    entryId: data.nextEntryId,
+  const entryData = {
     title: $titleInput.value,
     photoUrl: $photoUrlInput.value,
     notes: $notesInput.value,
   };
-  data.entries.unshift(newEntry);
-  data.nextEntryId++;
-  const $entry = renderEntry(newEntry);
-  $entriesList.prepend($entry);
+  if (data.editing) {
+    const editedEntry = {
+      ...entryData,
+      entryId: data.editing.entryId,
+    };
+    const index = data.entries.findIndex(
+      (entry) => entry.entryId === data.editing.entryId,
+    );
+    if (index !== -1) {
+      data.entries[index] = editedEntry;
+      const $editedEntry = renderEntry(editedEntry);
+      const $originalEntry = $entriesList.querySelector(
+        `.entry-item[data-entry-id="${data.editing.entryId}"]`,
+      );
+      if ($originalEntry) {
+        $originalEntry.replaceWith($editedEntry);
+      }
+      data.editing = null;
+      $title.textContent = 'New Entry';
+    }
+  } else {
+    const newEntry = {
+      ...entryData,
+      entryId: data.nextEntryId++,
+    };
+    data.entries.unshift(newEntry);
+    const $entry = renderEntry(newEntry);
+    $entriesList.prepend($entry);
+  }
   $photoPreview.setAttribute('src', 'images/placeholder-image-square.jpg');
   $form.reset();
   savedData();
@@ -52,25 +77,54 @@ $newEntryButton.addEventListener('click', (event) => {
 });
 function renderEntry(entry) {
   const $entryItem = document.createElement('li');
-  $entryItem.className = 'entry-item';
+  $entryItem.className = 'entry-item row';
+  $entryItem.setAttribute('data-entry-id', entry.entryId.toString());
   const $entryImage = document.createElement('div');
-  $entryImage.className = 'entry-image';
+  $entryImage.className = 'entry-image li-half';
   const $img = document.createElement('img');
   $img.setAttribute('src', entry.photoUrl);
   $img.setAttribute('alt', 'Entry Image');
   $entryImage.appendChild($img);
   const $entryContent = document.createElement('div');
-  $entryContent.className = 'entry-content';
+  $entryContent.className = 'entry-content li-half';
   const $title = document.createElement('h3');
   $title.textContent = entry.title;
+  const $editIcon = document.createElement('i');
+  $editIcon.className = 'fa-solid fa-pencil ';
+  const $titleContainer = document.createElement('div');
+  $titleContainer.className = 'row4';
+  $titleContainer.appendChild($title);
+  $titleContainer.appendChild($editIcon);
   const $notes = document.createElement('p');
   $notes.textContent = entry.notes;
-  $entryContent.appendChild($title);
+  $entryContent.appendChild($titleContainer);
   $entryContent.appendChild($notes);
   $entryItem.appendChild($entryImage);
   $entryItem.appendChild($entryContent);
   return $entryItem;
 }
+const $ul = document.getElementById('entries-list');
+$ul.addEventListener('click', (event) => {
+  const $target = event.target;
+  if ($target.tagName !== 'I') return;
+  const $entryItem = $target.closest('.entry-item');
+  const entryId = $entryItem.getAttribute('data-entry-id');
+  if (entryId === null) throw new Error('entryId does not exist');
+  for (let i = 0; i < data.entries.length; i++) {
+    if (data.entries[i].entryId === parseInt(entryId)) {
+      data.editing = data.entries[i];
+      break;
+    }
+  }
+  if (data.editing) {
+    $titleInput.value = data.editing.title;
+    $photoUrlInput.value = data.editing.photoUrl;
+    $notesInput.value = data.editing.notes;
+    $photoPreview.setAttribute('src', data.editing.photoUrl);
+    $title.textContent = 'Edit Entry';
+    viewSwap('entry-form');
+  }
+});
 function toggleNoEntries() {
   if (data.entries.length === 0) {
     $noEntries.classList.remove('hidden');
